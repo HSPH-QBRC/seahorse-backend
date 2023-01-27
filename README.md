@@ -9,4 +9,4 @@ create extension aws_s3 cascade;
 ## Data import from S3
 Make sure that gzip'ed S3 objects have the correct metadata set:
 * Content-Encoding: gzip
-* Content-Type: application/octet-stream
+* Content-Type: application/octet-stream or application/x-gzip
