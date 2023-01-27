@@ -76,6 +76,14 @@ create table ensembl2symbol
     entrez_id  integer
 );
 
+create table expression_correlation
+(
+    gene_a varchar(15),
+    gene_b varchar(15),
+    tissue varchar(40),
+    correlation real
+);
+
 create table gene_expression
 (
     ensembl_id varchar(22),
