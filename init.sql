@@ -110,9 +110,10 @@ create table metadata2expression
 
 create table metadata2metadata
 (
-    metadata1      varchar(10),
-    metadata2      varchar(10),
+    category_a     varchar(10),
+    category_b     varchar(10),
     test           varchar(20),
     test_statistic real,
-    pvalue         double precision
+    pvalue         double precision,
+    primary key (category_a, category_b)
 );
