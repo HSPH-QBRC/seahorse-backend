@@ -78,9 +78,9 @@ create table ensembl2symbol
 
 create table expression_correlation
 (
-    gene_a varchar(15),
-    gene_b varchar(15),
-    tissue varchar(40),
+    gene_a      varchar(15),
+    gene_b      varchar(15),
+    tissue      varchar(40),
     correlation real
 );
 
@@ -89,4 +89,13 @@ create table gene_expression
     ensembl_id varchar(22),
     gtex_id    varchar(30),
     level      integer
+);
+
+create table metadata2expression
+(
+    metadata       varchar(10),
+    ensembl_id     varchar(25),
+    test           varchar(20),
+    test_statistic real,
+    pvalue         double precision
 );
