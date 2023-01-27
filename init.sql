@@ -91,6 +91,14 @@ create table gene_expression
     level      integer
 );
 
+create table metadata
+(
+    varname varchar(10),
+    vardesc text,
+    type    varchar(25),
+    comment text
+);
+
 create table metadata2expression
 (
     metadata       varchar(10),
