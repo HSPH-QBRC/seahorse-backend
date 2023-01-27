@@ -99,3 +99,12 @@ create table metadata2expression
     test_statistic real,
     pvalue         double precision
 );
+
+create table metadata2metadata
+(
+    metadata1      varchar(10),
+    metadata2      varchar(10),
+    test           varchar(20),
+    test_statistic real,
+    pvalue         double precision
+);
