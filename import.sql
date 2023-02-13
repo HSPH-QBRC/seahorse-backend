@@ -21,6 +21,7 @@ select aws_s3.table_import_from_s3(
     '(format csv, delimiter E''\t'', header)',
     :'s3_uri'
 );
+create index on ensembl2symbol (ensembl_id);
 
 select aws_commons.create_s3_uri(
     'seahorse-data',
@@ -28,11 +29,12 @@ select aws_commons.create_s3_uri(
     'us-east-2'
 ) as s3_uri \gset
 select aws_s3.table_import_from_s3(
-    'expression',
+    'gene_expression',
     '',
     '(format csv, delimiter E''\t'', header)',
     :'s3_uri'
 );
+create index on gene_expression (ensembl_id);
 
 select aws_commons.create_s3_uri(
     'seahorse-data',
@@ -45,6 +47,7 @@ select aws_s3.table_import_from_s3(
     '(format csv, delimiter E''\t'', header)',
     :'s3_uri'
 );
+alter table expression_correlation add primary key (gene_a, gene_b, tissue);
 
 select aws_commons.create_s3_uri(
     'seahorse-data',
