@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.0"
     }
+    random = {
+      source = "hashicorp/random"
+      version = "~> 3.4"
+    }
   }
 
   backend "s3" {
@@ -31,3 +35,5 @@ provider "aws" {
     tags = local.common_tags
   }
 }
+
+data "aws_region" "current" {}
