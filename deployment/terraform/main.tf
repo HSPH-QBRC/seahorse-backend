@@ -7,7 +7,7 @@ terraform {
       version = "~> 4.0"
     }
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "~> 3.4"
     }
   }
@@ -20,6 +20,28 @@ terraform {
   }
 }
 
+resource "random_password" "rds_master" {
+  length           = 28
+  special          = true
+  # password for the database master user can include any printable ASCII character except /, ', ", @, or a space
+  # https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "aws_secretsmanager_secret" "rds_login" {
+  name                    = "${local.common_tags.Name}-rds-credentials"
+  description             = "Seahorse database master username and password"
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret_version" "rds_login" {
+  secret_id     = aws_secretsmanager_secret.rds_login.id
+  secret_string = jsonencode({
+    username = "postgres"
+    password = random_password.rds_master.result
+  })
+}
+
 locals {
   stack       = lower(terraform.workspace)
   common_tags = {
@@ -27,6 +49,7 @@ locals {
     Project   = "Seahorse"
     Terraform = "True"
   }
+  db_credentials = jsondecode(aws_secretsmanager_secret_version.rds_login.secret_string)
 }
 
 provider "aws" {

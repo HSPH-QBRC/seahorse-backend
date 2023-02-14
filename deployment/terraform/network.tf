@@ -20,16 +20,33 @@ resource "aws_route_table" "public" {
   }
 }
 
-resource "aws_subnet" "public" {
+resource "aws_subnet" "public_a" {
   vpc_id            = aws_vpc.main.id
   availability_zone = "${data.aws_region.current.name}a"
   cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, 10)
   ipv6_cidr_block   = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, 10)
 }
 
-resource "aws_route_table_association" "public" {
+resource "aws_subnet" "public_b" {
+  vpc_id            = aws_vpc.main.id
+  availability_zone = "${data.aws_region.current.name}b"
+  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, 20)
+  ipv6_cidr_block   = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, 20)
+}
+
+resource "aws_route_table_association" "public_a" {
   route_table_id = aws_route_table.public.id
-  subnet_id      = aws_subnet.public.id
+  subnet_id      = aws_subnet.public_a.id
+}
+
+resource "aws_route_table_association" "public_b" {
+  route_table_id = aws_route_table.public.id
+  subnet_id      = aws_subnet.public_b.id
+}
+
+resource "aws_db_subnet_group" "public" {
+  name       = local.common_tags.Name
+  subnet_ids = [aws_subnet.public_a.id, aws_subnet.public_b.id]
 }
 
 resource "aws_security_group" "database" {
