@@ -16,12 +16,13 @@ resource "aws_iam_role" "lambda" {
   })
 }
 
-resource "aws_lambda_function" "metadata" {
-  function_name = "metadata2metadata"
-  filename      = "metadata_payload.zip"
-  handler       = "lambda_function.lambda_handler"
-  role          = aws_iam_role.lambda.arn
-  runtime       = "python3.9"
+resource "aws_lambda_function" "hello" {
+  function_name    = "hello"
+  handler          = "hello.lambda_handler"
+  filename         = "${path.module}/build/hello.zip"
+  source_code_hash = data.archive_file.hello_zip.output_base64sha256
+  runtime          = "python3.9"
+  role             = aws_iam_role.lambda.arn
   environment {
     variables = {
       db_host    = aws_rds_cluster.main.endpoint
@@ -29,4 +30,10 @@ resource "aws_lambda_function" "metadata" {
       rds_secret = aws_secretsmanager_secret.rds_login.name
     }
   }
+}
+
+data "archive_file" "hello_zip" {
+  source_file = "${path.module}/src/hello.py"
+  output_path = "${path.module}/build/hello.zip"
+  type        = "zip"
 }
