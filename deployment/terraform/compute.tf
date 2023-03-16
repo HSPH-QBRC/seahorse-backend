@@ -37,3 +37,16 @@ data "archive_file" "hello_zip" {
   output_path = "${path.module}/build/hello.zip"
   type        = "zip"
 }
+
+# user for local development with AWS SAM CLI
+resource "null_resource" "sam_metadata_aws_lambda_function_hello" {
+  triggers = {
+    resource_name        = "aws_lambda_function.hello"
+    resource_type        = "ZIP_LAMBDA_FUNCTION"
+    original_source_code = "${path.module}/src"
+    built_output_path    = "${path.module}/build/hello.zip"
+  }
+  depends_on = [
+    data.archive_file.hello_zip
+  ]
+}
