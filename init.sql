@@ -68,6 +68,14 @@ create table annotations
     dthhrdy   real
 );
 
+create table data_dictionary
+(
+    varname varchar(10),
+    vardesc varchar(310),
+    varmeta varchar(10),
+    vartype varchar(25)
+);
+
 create table ensembl2symbol
 (
     alias      varchar(32),
@@ -101,7 +109,7 @@ create table metadata
 
 create table metadata2expression
 (
-    metadata       varchar(10),
+    varname        varchar(10),
     ensembl_id     varchar(25),
     test           varchar(20),
     test_statistic real,
