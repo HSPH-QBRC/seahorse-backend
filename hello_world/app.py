@@ -1,4 +1,5 @@
 import json
+import os
 
 # import requests
 
@@ -33,6 +34,7 @@ def lambda_handler(event, context):
 
     #     raise e
 
+    print(os.environ.get("DB_HOST"))
     return {
         "statusCode": 200,
         "body": json.dumps({
