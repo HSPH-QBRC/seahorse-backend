@@ -132,3 +132,10 @@ create table metadata2metadata
     pvalue         double precision,
     primary key (category_a, category_b)
 );
+
+create table phenotype_data_records
+(
+    subject_id varchar(10),
+    varname    varchar(10),
+    value      text
+);
