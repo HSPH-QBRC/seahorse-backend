@@ -107,6 +107,13 @@ create table metadata
     comment text
 );
 
+create table metadata_data_records
+(
+    gtex_id varchar(42),
+    varname varchar(10),
+    value   text
+);
+
 create table metadata2expression
 (
     varname        varchar(10),
@@ -124,4 +131,11 @@ create table metadata2metadata
     test_statistic real,
     pvalue         double precision,
     primary key (category_a, category_b)
+);
+
+create table phenotype_data_records
+(
+    subject_id varchar(10),
+    varname    varchar(10),
+    value      text
 );
