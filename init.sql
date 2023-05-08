@@ -127,10 +127,10 @@ create table metadata2metadata
 (
     category_a     varchar(10),
     category_b     varchar(10),
+    tissue         varchar(40),
     test           varchar(20),
     test_statistic real,
-    pvalue         double precision,
-    primary key (category_a, category_b)
+    pvalue         double precision
 );
 
 create table phenotype_data_records
