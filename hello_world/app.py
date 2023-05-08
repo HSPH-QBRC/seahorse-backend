@@ -33,7 +33,7 @@ def lambda_handler(event, context):
     #     print(e)
 
     #     raise e
-
+    print("in lambda")
     print(os.environ.get("DB_HOST"))
     return {
         "statusCode": 200,
