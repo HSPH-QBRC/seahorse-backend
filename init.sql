@@ -118,6 +118,7 @@ create table metadata2expression
 (
     varname        varchar(10),
     ensembl_id     varchar(25),
+    tissue         varchar(40),
     test           varchar(20),
     test_statistic real,
     pvalue         double precision
