@@ -97,6 +97,7 @@ select aws_s3.table_import_from_s3(
     :'s3_uri'
 );
 create index on metadata2expression (varname);
+create index on metadata2expression (ensembl_id);
 
 select aws_commons.create_s3_uri(
     'seahorse-data',
