@@ -37,13 +37,6 @@ create table metadata
     value   text
 );
 
-create table metadata_data_records
-(
-    gtex_id varchar(42),
-    varname varchar(10),
-    value   text
-);
-
 create table metadata2expression
 (
     varname        varchar(10),
