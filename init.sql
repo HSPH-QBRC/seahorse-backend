@@ -287,10 +287,10 @@ create table gene_expression
 
 create table metadata
 (
+    gtex_id varchar(30),
+    tissue  varchar(40),
     varname varchar(10),
-    vardesc text,
-    type    varchar(25),
-    comment text
+    value   text
 );
 
 create table metadata_data_records
