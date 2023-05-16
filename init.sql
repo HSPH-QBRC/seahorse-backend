@@ -56,10 +56,3 @@ create table metadata2metadata
     test_statistic real,
     pvalue         double precision
 );
-
-create table phenotype_data_records
-(
-    subject_id varchar(10),
-    varname    varchar(10),
-    value      text
-);
