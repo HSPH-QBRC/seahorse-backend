@@ -21,6 +21,8 @@ create extension aws_s3 cascade;
 ```
 
 ## Data import from S3
-Make sure that gzip'ed S3 objects have the correct metadata set:
+Numeric columns in TSV files should not have `None` or `NA` strings: replace with blanks or `nan`/`NaN`
+
+Make sure that gzip'ed TSV files in S3 have the correct metadata set:
 * Content-Encoding: gzip
 * Content-Type: application/octet-stream or application/x-gzip
