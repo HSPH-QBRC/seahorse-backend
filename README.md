@@ -26,3 +26,8 @@ Numeric columns in TSV files should not have `None` or `NA` strings: replace wit
 Make sure that gzip'ed TSV files in S3 have the correct metadata set:
 * Content-Encoding: gzip
 * Content-Type: application/octet-stream or application/x-gzip
+
+For example:
+```shell
+aws s3 cp data.tsv.gz s3://seahorse-data/db_tables/data.tsv.gz --content-encoding gzip --content-type application/octet-stream
+```
