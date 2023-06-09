@@ -29,6 +29,21 @@ create table gene_expression
     level      integer
 );
 
+create table gsea
+(
+    pathway      text,
+    pvalue       real,
+    padj         real,
+    lod2err      real,
+    es           real,
+    nes          real,
+    size         integer,
+    ranks        real[],
+    leading_edge varchar(25)[],
+    varname      varchar(10),
+    tissue       varchar(40)
+);
+
 create table metadata
 (
     gtex_id varchar(30),
