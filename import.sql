@@ -60,6 +60,7 @@ select aws_s3.table_import_from_s3(
     '(format csv, delimiter E''\t'', header)',
     :'s3_uri'
 );
+create index on gsea (varname);
 
 select aws_commons.create_s3_uri(
     'seahorse-data',
