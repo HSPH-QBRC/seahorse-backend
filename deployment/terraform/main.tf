@@ -1,5 +1,6 @@
 terraform {
-  required_version = "~> 1.4.0"
+  # required_version = "~> 1.4.0"
+  required_version = ">= 1.4.0, < 2.0.0"
 
   required_providers {
     aws = {
@@ -13,7 +14,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket               = "seahorse-terraform"
+    bucket               = "seahorse-terraform-jq"
     key                  = "backend.tfstate"
     region               = "us-east-2"
     workspace_key_prefix = "workspace"
@@ -43,9 +44,11 @@ resource "aws_secretsmanager_secret_version" "rds_login" {
 }
 
 locals {
-  stack       = lower(terraform.workspace)
+  # stack       = lower(terraform.workspace)
+  stack       = "seahorse"
   common_tags = {
-    Name      = "${local.stack}-seahorse"
+    # Name      = "${local.stack}-seahorse"
+    Name      = "seahorse"
     Project   = "Seahorse"
     Terraform = "True"
   }

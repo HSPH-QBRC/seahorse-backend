@@ -23,14 +23,21 @@ connection = psycopg2.connect(
 )
 
 @logger.inject_lambda_context(log_event=True)
+
 def lambda_handler(event, context):
-    sql = "SELECT * FROM data_dictionary"
+    if ((params := event["queryStringParameters"]) is None
+        or "meta" not in params
+        or "pathway" not in params
+        ):
+        return {"statusCode": HTTPStatus.BAD_REQUEST}
+        
+    sql = "SELECT tissue FROM gsea WHERE varname = %s AND pathway = %s AND pvalue <= 0.05 AND pvalue is not null ORDER BY pvalue"
     
     with connection:
         with connection.cursor() as cursor:
-            cursor.execute(sql)
+            cursor.execute(sql, (params["meta"], params["pathway"]))
             result = cursor.fetchall()
-          
+            
     return {
         "statusCode": HTTPStatus.OK,
         "headers": {"Content-Type": "application/json"},

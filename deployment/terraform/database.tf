@@ -10,7 +10,8 @@ resource "aws_rds_cluster_parameter_group" "main" {
 resource "aws_rds_cluster" "main" {
   cluster_identifier              = local.common_tags.Name
   engine                          = "aurora-postgresql"
-  engine_version                  = "14.5"
+  # engine_version                  = "14.5"
+  engine_version                  = "14.11"
   copy_tags_to_snapshot           = true
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.main.name
   db_subnet_group_name            = aws_db_subnet_group.public.name

@@ -6,16 +6,22 @@ from aws_lambda_powertools.logging.logger import Logger
 from aws_lambda_powertools.utilities import parameters
 import psycopg2
 
-
 import numpy as np
 
 logger = Logger()
 
-db_login = json.loads(parameters.get_secret(os.environ.get("RDS_SECRET")))
+# db_login = json.loads(parameters.get_secret(os.environ.get("RDS_SECRET")))
+
+# connection = psycopg2.connect(
+#     user=db_login["username"], password=db_login["password"],
+#     host=os.environ.get("DB_HOST"), database=os.environ.get("DB_NAME")
+# )
 
 connection = psycopg2.connect(
-    user=db_login["username"], password=db_login["password"],
-    host=os.environ.get("DB_HOST"), database=os.environ.get("DB_NAME")
+    user=os.environ.get("USER"),
+    password=os.environ.get("PASSWORD"),
+    host=os.environ.get("DB_HOST"), 
+    database=os.environ.get("DB_NAME")
 )
 
 @logger.inject_lambda_context(log_event=True)
@@ -23,22 +29,21 @@ def lambda_handler(event, context):
     try: 
         if ((params := event["queryStringParameters"]) is None
             or "category_a" not in params
+            or "tissue" not in params
             ):
             return {"statusCode": HTTPStatus.BAD_REQUEST}
             
         category_a = params["category_a"]
+        tissue = params["tissue"]
         
         comparison = "" if "comparison" not in params else params["comparison"]
         
         if comparison == "" or comparison == "m2m":
-            if(params['meta'] == 'phenotype'):
-                sql = "SELECT subject_id, value from phenotype_data_records AS pdr WHERE pdr.varname = '{0}' AND pdr.value is not null".format(category_a)
-            elif(params['meta'] == 'library'):
-                sql = "SELECT gtex_id, value from metadata_data_records AS mdr WHERE mdr.varname = '{0}' AND mdr.value is not null".format(category_a)
-
+            # sql = "SELECT DISTINCT gtex_id, value from metadata WHERE varname = '{0}' AND tissue = '{1}' AND value is not null".format(category_a, tissue)
+            sql = "SELECT DISTINCT gtex_id, value from metadata WHERE varname = %s AND tissue = %s AND value is not null"
         else:
-            sql = "SELECT sampid, gene_expression FROM expression WHERE expression.ensg = '{0}'".format(category_a)
-            
+            # sql = "SELECT DISTINCT m1.gtex_id, exp.gene_expression FROM expression AS exp JOIN metadata as m1 ON m1.gtex_id = exp.sampid WHERE exp.ensg = '{0}' AND m1.tissue = '{1}' AND exp.gene_expression is not null".format(category_a, tissue)
+            sql = "SELECT DISTINCT m1.gtex_id, exp.gene_expression FROM expression AS exp JOIN metadata as m1 ON m1.gtex_id = exp.sampid WHERE exp.ensg = %s AND m1.tissue = %s AND exp.gene_expression is not null"
         def barchart(data):
             categoryArr = []
             categoryCount = {}
@@ -86,7 +91,7 @@ def lambda_handler(event, context):
         
         with connection:
             with connection.cursor() as cursor:
-                cursor.execute(sql)
+                cursor.execute(sql, (category_a, tissue))
                 result = cursor.fetchall()
                 
                 if comparison != "":
@@ -99,7 +104,6 @@ def lambda_handler(event, context):
             "statusCode": HTTPStatus.OK,
             "headers": {"Content-Type": "application/json"},
             "body": json.dumps(final_result)
-            # "body": json.dumps(str(result))
         }
 
     except Exception as e:
