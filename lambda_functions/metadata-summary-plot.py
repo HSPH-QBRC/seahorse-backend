@@ -39,11 +39,10 @@ def lambda_handler(event, context):
         comparison = "" if "comparison" not in params else params["comparison"]
         
         if comparison == "" or comparison == "m2m":
-            # sql = "SELECT DISTINCT gtex_id, value from metadata WHERE varname = '{0}' AND tissue = '{1}' AND value is not null".format(category_a, tissue)
             sql = "SELECT DISTINCT gtex_id, value from metadata WHERE varname = %s AND tissue = %s AND value is not null"
         else:
-            # sql = "SELECT DISTINCT m1.gtex_id, exp.gene_expression FROM expression AS exp JOIN metadata as m1 ON m1.gtex_id = exp.sampid WHERE exp.ensg = '{0}' AND m1.tissue = '{1}' AND exp.gene_expression is not null".format(category_a, tissue)
-            sql = "SELECT DISTINCT m1.gtex_id, exp.gene_expression FROM expression AS exp JOIN metadata as m1 ON m1.gtex_id = exp.sampid WHERE exp.ensg = %s AND m1.tissue = %s AND exp.gene_expression is not null"
+            sql = "SELECT DISTINCT m1.gtex_id, exp.level FROM gene_expression AS exp JOIN metadata as m1 ON m1.gtex_id = exp.gtex_id WHERE exp.ensembl_id = %s AND m1.tissue = %s AND exp.level is not null"
+
         def barchart(data):
             categoryArr = []
             categoryCount = {}
