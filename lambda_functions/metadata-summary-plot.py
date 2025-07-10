@@ -10,18 +10,11 @@ import numpy as np
 
 logger = Logger()
 
-# db_login = json.loads(parameters.get_secret(os.environ.get("RDS_SECRET")))
-
-# connection = psycopg2.connect(
-#     user=db_login["username"], password=db_login["password"],
-#     host=os.environ.get("DB_HOST"), database=os.environ.get("DB_NAME")
-# )
+db_login = json.loads(parameters.get_secret(os.environ.get("RDS_SECRET")))
 
 connection = psycopg2.connect(
-    user=os.environ.get("USER"),
-    password=os.environ.get("PASSWORD"),
-    host=os.environ.get("DB_HOST"), 
-    database=os.environ.get("DB_NAME")
+    user=db_login["username"], password=db_login["password"],
+    host=os.environ.get("DB_HOST"), database=os.environ.get("DB_NAME")
 )
 
 @logger.inject_lambda_context(log_event=True)

@@ -1,5 +1,5 @@
 ## Lambda Function Setup
-There are **10 Lambda functions** required for the Seahorse backend API, each serving a specialized data endpoint. The source code for each function can be found in here [`lambda_functions`](./).
+There are **11 Lambda functions** required for the Seahorse backend API, each serving a specialized data endpoint. The source code for each function can be found in here [`lambda_functions`](./).
 
 **The required Lambda functions are:**
 1. `ensembl2symbol`
@@ -12,6 +12,7 @@ There are **10 Lambda functions** required for the Seahorse backend API, each se
 8. `metadata2gene`
 9. `metadata2metadata`
 10. `summary-plot`
+11. `gsea-download-table`
 
 ### Function Configuration
 - **Function name:** `ensembl2symbol`
@@ -75,5 +76,15 @@ Configure these environment variables for your Lambda function (these support se
 - **DB_HOST** : `seahorse-instance.cfasu6406b8a.us-east-2.rds.amazonaws.com  `
 - **DB_NAME** : `postgres`
 - **RDS_SECRET** : `seahorse-rds-credentials` 
-- **user** : `postgres`
-- **password** : (password)  
+
+
+### Create VPC Endpoint
+To allow the Lambda functions running inside your VPC to access secrets in AWS Secrets Manager, you must create a **VPC interface endpoint** for Secrets Manager. Without this endpoint (or a NAT Gateway), Lambdas in private subnets will time out when trying to retrieve secrets.
+
+- **Type** : `AWS service`
+- **Services** : `com.amazonaws.us-east-2.secretsmanager`
+- **VPC** : `vpc-00086dc0a6124673c (seahorse)`
+- **Subnets** : `us-east-2a (use2-az1)` => `subnet-02a8a562a0adc6c9b`
+                `us-east-2a (use2-az2)` => `subnet-041c0a235db9eb7df`
+- **Security Groups** : `default`
+
