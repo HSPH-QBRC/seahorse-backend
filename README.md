@@ -1,44 +1,27 @@
-<!-- # seahorse-backend
-
-## AWS SAM CLI
-
-[Docker](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/install-docker.html)
-
-```shell
-sam build
-```
-```shell
-sam local invoke
-```
-```shell
-sam local start-lambda
-```
-
-## Initial configuration
-Enable data imports from S3 after a new Aurora cluster is created:
-```postgresql
-create extension aws_s3 cascade;
-```
-
-## Data import from S3
-Numeric columns in TSV files should not have `None` or `NA` strings: replace with blanks or `nan`/`NaN`
-
-Make sure that gzip'ed TSV files in S3 have the correct metadata set:
-* Content-Encoding: gzip
-* Content-Type: application/octet-stream or application/x-gzip
-
-For example:
-```shell
-aws s3 cp data.tsv.gz s3://seahorse-data/db_tables/data.tsv.gz --content-encoding gzip --content-type application/octet-stream
-``` -->
-
 # Seahorse Backend
 
-This repository provides the backend setup and data-loading instructions for the Seahorse project. The process involves loading large biological datasets into a secure AWS RDS (PostgreSQL) database using EC2 and S3 as intermediaries.
+This repository provides the backend setup and data-loading instructions for the Seahorse project. The process involves loading large biological datasets into a secure AWS RDS (PostgreSQL) database using EC2 and S3 as intermediaries. To enable secure and scalable communication between the frontend and backend, we use AWS Lambda functions as API endpoints that interface with the database and return data to the frontend.
 
 ## Overview
 
 SEAHORSE leverages structured multi-omic datasets for hypothesis generation and validation. For security and compliance, data imports to the RDS instance are performed within a secure EC2 environment with connectivity to both the S3 bucket (where input files reside) and the RDS database.
+
+## Deployment
+Configure Terraform:
+```shell
+cd deployment/terraform
+terraform init
+
+Deploy the site:
+```shell
+terraform apply
+```
+
+## Cleanup
+Delete the site:
+```shell
+terraform destroy
+```
 
 ## Data Loading Workflow
 
